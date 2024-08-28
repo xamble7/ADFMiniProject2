@@ -1,0 +1,15 @@
+{
+	"name": "DS_products",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_MongoDb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "MongoDbAtlasCollection",
+		"schema": [],
+		"typeProperties": {
+			"collection": "products"
+		}
+	}
+}
