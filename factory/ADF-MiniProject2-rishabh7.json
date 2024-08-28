@@ -1,0 +1,9 @@
+{
+	"name": "ADF-MiniProject2-rishabh7",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "7eba1816-6eb8-4b10-98ac-e41c3b5bbc36",
+		"tenantId": "2800c0a0-70e9-49be-8733-faeaa6aced99"
+	}
+}
