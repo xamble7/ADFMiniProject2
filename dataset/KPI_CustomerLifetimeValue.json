@@ -1,0 +1,19 @@
+{
+	"name": "KPI_CustomerLifetimeValue",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DB_AzureSql",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Key_Performance_Indicator/1"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "clv"
+		}
+	}
+}

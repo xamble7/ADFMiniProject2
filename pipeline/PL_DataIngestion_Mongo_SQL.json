@@ -106,8 +106,6 @@
 				"name": "CustomerData",
 				"description": "Ingest the Customer data From MongoDb Server to the SQL database",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -198,8 +196,6 @@
 				"name": "TransactionsData",
 				"description": "Ingest the Transactions data From MongoDb Server to the SQL database",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -263,7 +259,8 @@
 									"path": "$['Quantity']['$numberInt']"
 								},
 								"sink": {
-									"name": "Quantity"
+									"name": "Quantity",
+									"type": "Int32"
 								}
 							},
 							{
@@ -271,7 +268,8 @@
 									"path": "$['TotalAmount']['$numberDouble']"
 								},
 								"sink": {
-									"name": "totalAmount"
+									"name": "totalAmount",
+									"type": "Double"
 								}
 							}
 						]
@@ -294,8 +292,6 @@
 				"name": "ItemsData",
 				"description": "Ingest the Items data From MongoDb Server to the SQL database",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",

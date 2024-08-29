@@ -1,13 +1,310 @@
 {
-	"name": "dataflow1",
+	"name": "DF_Generate_KPI",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
-			"sources": [],
-			"sinks": [],
-			"transformations": [],
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DB_Transactions",
+						"type": "DatasetReference"
+					},
+					"name": "TransactionsDb0"
+				},
+				{
+					"dataset": {
+						"referenceName": "DB_Transactions",
+						"type": "DatasetReference"
+					},
+					"name": "TransactionsDb1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DB_Transactions",
+						"type": "DatasetReference"
+					},
+					"name": "TransactionsDb2"
+				},
+				{
+					"dataset": {
+						"referenceName": "DB_Transactions",
+						"type": "DatasetReference"
+					},
+					"name": "TransactionsDb3"
+				},
+				{
+					"dataset": {
+						"referenceName": "DB_Products",
+						"type": "DatasetReference"
+					},
+					"name": "ProductsDb"
+				},
+				{
+					"dataset": {
+						"referenceName": "DB_Transactions",
+						"type": "DatasetReference"
+					},
+					"name": "TransactionsDb4"
+				},
+				{
+					"dataset": {
+						"referenceName": "DB_Transactions",
+						"type": "DatasetReference"
+					},
+					"name": "TransactionsDb5"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "KPI_TotalSalesPerCustomer",
+						"type": "DatasetReference"
+					},
+					"name": "TotalSales",
+					"description": "Export data to KPI_TotalSalesPerCustomer"
+				},
+				{
+					"dataset": {
+						"referenceName": "KPI_TotalQuantityPurchasedPerProduct",
+						"type": "DatasetReference"
+					},
+					"name": "TotalQuantity",
+					"description": "Export data to KPI_TotalQuantityPurchasedPerProduct"
+				},
+				{
+					"dataset": {
+						"referenceName": "KPI_AverageTransactionAmountPerCustomer",
+						"type": "DatasetReference"
+					},
+					"name": "AvgTransactionAmount",
+					"description": "Export data to KPI_AverageTransactionAmountPerCustomer"
+				},
+				{
+					"dataset": {
+						"referenceName": "KPI_ProductRevenue",
+						"type": "DatasetReference"
+					},
+					"name": "ProductsRevenue"
+				},
+				{
+					"dataset": {
+						"referenceName": "KPI_CustomerLifetimeValue",
+						"type": "DatasetReference"
+					},
+					"name": "CLV"
+				},
+				{
+					"dataset": {
+						"referenceName": "KPI_MostPopularProduct",
+						"type": "DatasetReference"
+					},
+					"name": "PopularProduct"
+				}
+			],
+			"transformations": [
+				{
+					"name": "TotalAmount",
+					"description": "Calculate the sum of TotalAmount for each customer."
+				},
+				{
+					"name": "Quantity",
+					"description": "Calculate the sum of Quantity for each product"
+				},
+				{
+					"name": "CustomerID",
+					"description": "Calculate the average of TotalAmount for each customer."
+				},
+				{
+					"name": "TdbJOINPdb"
+				},
+				{
+					"name": "Revenue",
+					"description": "Sum up the total revenue generated for each product by multiplying Quantity with ProductPrice."
+				},
+				{
+					"name": "CustomerLifetimeValue",
+					"description": "Sum of all TotalAmount spent by each customer."
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "sort1"
+				},
+				{
+					"name": "select1"
+				}
+			],
 			"scriptLines": [
-				""
+				"source(output(",
+				"          id as string,",
+				"          TransactionID as string,",
+				"          CustomerID as string,",
+				"          ProductID as string,",
+				"          Quantity as string,",
+				"          totalAmount as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> TransactionsDb0",
+				"source(output(",
+				"          id as string,",
+				"          TransactionID as string,",
+				"          CustomerID as string,",
+				"          ProductID as string,",
+				"          Quantity as integer,",
+				"          totalAmount as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> TransactionsDb1",
+				"source(output(",
+				"          id as string,",
+				"          TransactionID as string,",
+				"          CustomerID as string,",
+				"          ProductID as string,",
+				"          Quantity as integer,",
+				"          totalAmount as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> TransactionsDb2",
+				"source(output(",
+				"          id as string,",
+				"          TransactionID as string,",
+				"          CustomerID as string,",
+				"          ProductID as string,",
+				"          Quantity as integer,",
+				"          totalAmount as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> TransactionsDb3",
+				"source(output(",
+				"          Id as string,",
+				"          ProductName as string,",
+				"          Category as string,",
+				"          Price as decimal(38,18),",
+				"          Supplier as string,",
+				"          Stock as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> ProductsDb",
+				"source(output(",
+				"          id as string,",
+				"          TransactionID as string,",
+				"          CustomerID as string,",
+				"          ProductID as string,",
+				"          Quantity as integer,",
+				"          totalAmount as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> TransactionsDb4",
+				"source(output(",
+				"          id as string,",
+				"          TransactionID as string,",
+				"          CustomerID as string,",
+				"          ProductID as string,",
+				"          Quantity as integer,",
+				"          totalAmount as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> TransactionsDb5",
+				"TransactionsDb0 aggregate(groupBy(CustomerID),",
+				"     totalAmount = sum(totalAmount)) ~> TotalAmount",
+				"TransactionsDb1 aggregate(groupBy(ProductID),",
+				"     Quantity = sum(Quantity)) ~> Quantity",
+				"TransactionsDb2 aggregate(groupBy(CustomerID),",
+				"     totalAmount = avg(totalAmount)) ~> CustomerID",
+				"TransactionsDb3, ProductsDb join(ProductID == ProductsDb@Id,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> TdbJOINPdb",
+				"TdbJOINPdb aggregate(groupBy(ProductID,",
+				"          ProductName),",
+				"     Quantity = sum(Quantity*Price)) ~> Revenue",
+				"TransactionsDb4 aggregate(groupBy(CustomerID),",
+				"     totalAmount = sum(totalAmount)) ~> CustomerLifetimeValue",
+				"TransactionsDb5 aggregate(groupBy(ProductID),",
+				"     Quantity = sum(Quantity)) ~> aggregate1",
+				"aggregate1 sort(desc(Quantity, true)) ~> sort1",
+				"sort1 select(mapColumn(",
+				"          ProductID,",
+				"          Quantity",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"TotalAmount sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> TotalSales",
+				"Quantity sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> TotalQuantity",
+				"CustomerID sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> AvgTransactionAmount",
+				"Revenue sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> ProductsRevenue",
+				"CustomerLifetimeValue sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> CLV",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> PopularProduct"
 			]
 		}
 	}
