@@ -1,0 +1,16 @@
+{
+	"name": "DB_Items",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DB_AzureSql",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "items"
+		}
+	}
+}

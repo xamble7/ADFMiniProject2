@@ -6,8 +6,6 @@
 				"name": "ProductsData",
 				"description": "Ingest the Products data From MongoDb Server to the SQL database. ",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -48,8 +46,6 @@
 				"name": "CustomerData",
 				"description": "Ingest the Customer data From MongoDb Server to the SQL database",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "ProductsData",
@@ -199,6 +195,53 @@
 				"outputs": [
 					{
 						"referenceName": "DB_Transactions",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "ItemsData",
+				"description": "Ingest the Items data From MongoDb Server to the SQL database",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "TransactionsData",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "MongoDbAtlasSource",
+						"batchSize": 100
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_Items",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DB_Items",
 						"type": "DatasetReference"
 					}
 				]

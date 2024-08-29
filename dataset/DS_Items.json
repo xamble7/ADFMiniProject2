@@ -1,0 +1,18 @@
+{
+	"name": "DS_Items",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_MongoDb",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "FullStack_Data"
+		},
+		"annotations": [],
+		"type": "MongoDbAtlasCollection",
+		"schema": [],
+		"typeProperties": {
+			"collection": "items"
+		}
+	}
+}
