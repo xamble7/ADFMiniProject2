@@ -120,11 +120,75 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
+						"preCopyScript": "drop table if exists dbo.transactions",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate",
 						"disableMetricsCollection": false
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['_id']['$oid']"
+								},
+								"sink": {
+									"name": "id"
+								}
+							},
+							{
+								"source": {
+									"path": "$['TransactionID']['$numberInt']"
+								},
+								"sink": {
+									"name": "TransactionID"
+								}
+							},
+							{
+								"source": {
+									"path": "$['CustomerID']['$numberInt']"
+								},
+								"sink": {
+									"name": "CustomerID"
+								}
+							},
+							{
+								"source": {
+									"path": "$['ProductID']['$numberInt']"
+								},
+								"sink": {
+									"name": "ProductID"
+								}
+							},
+							{
+								"source": {
+									"path": "$['Quantity']['$numberInt']"
+								},
+								"sink": {
+									"name": "Quantity"
+								}
+							},
+							{
+								"source": {
+									"path": "$['TotalAmount']['$numberDouble']"
+								},
+								"sink": {
+									"name": "totalAmount"
+								}
+							},
+							{
+								"source": {
+									"path": "$['TransactionDate']['$date']['$numberLong']"
+								},
+								"sink": {
+									"name": "date",
+									"type": "String"
+								}
+							}
+						]
+					}
 				},
 				"inputs": [
 					{
