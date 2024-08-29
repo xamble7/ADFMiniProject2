@@ -10,6 +10,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "DBTransactions"
+				},
+				{
+					"dataset": {
+						"referenceName": "DB_Items",
+						"type": "DatasetReference"
+					},
+					"name": "DBItems"
 				}
 			],
 			"sinks": [
@@ -19,11 +26,21 @@
 						"type": "DatasetReference"
 					},
 					"name": "SinkTransactions"
+				},
+				{
+					"dataset": {
+						"referenceName": "DB_Items",
+						"type": "DatasetReference"
+					},
+					"name": "SinkItems"
 				}
 			],
 			"transformations": [
 				{
-					"name": "derivedColumn1"
+					"name": "DateFormatInDDMMYYYY"
+				},
+				{
+					"name": "DateFormatingDDMMYYYY"
 				}
 			],
 			"scriptLines": [
@@ -40,8 +57,23 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> DBTransactions",
-				"DBTransactions derive(date = toDate(toTimestamp(toInteger(toLong(date) / toLong(1000))*1000l))) ~> derivedColumn1",
-				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"source(output(",
+				"          Id as string,",
+				"          ItemId as string,",
+				"          ItemName as string,",
+				"          Category as string,",
+				"          Quantity as string,",
+				"          {Price (Per Unit)} as double,",
+				"          Supplier as string,",
+				"          Date as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> DBItems",
+				"DBTransactions derive(date = toDate(toTimestamp(toInteger(toLong(date) / toLong(1000))*1000l))) ~> DateFormatInDDMMYYYY",
+				"DBItems derive(Date = toDate(toTimestamp(toInteger(toLong(Date) / toLong(1000))*1000l))) ~> DateFormatingDDMMYYYY",
+				"DateFormatInDDMMYYYY sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
@@ -50,7 +82,17 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> SinkTransactions"
+				"     errorHandlingOption: 'stopOnFirstError') ~> SinkTransactions",
+				"DateFormatingDDMMYYYY sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> SinkItems"
 			]
 		}
 	}
