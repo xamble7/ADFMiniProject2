@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "DF_Transformation",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -9,40 +9,30 @@
 						"referenceName": "DB_Customer",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "CustomerTable"
 				},
 				{
 					"dataset": {
 						"referenceName": "DB_Transactions",
 						"type": "DatasetReference"
 					},
-					"name": "source2"
-				},
-				{
-					"dataset": {
-						"referenceName": "DB_Items",
-						"type": "DatasetReference"
-					},
-					"name": "source3"
+					"name": "TransactionTable"
 				},
 				{
 					"dataset": {
 						"referenceName": "DB_Products",
 						"type": "DatasetReference"
 					},
-					"name": "source4"
+					"name": "ProductTable"
 				}
 			],
 			"sinks": [],
 			"transformations": [
 				{
-					"name": "join1"
+					"name": "CTjoinTT"
 				},
 				{
-					"name": "join2"
-				},
-				{
-					"name": "join3"
+					"name": "CTjoinTTjoinPT"
 				}
 			],
 			"scriptLines": [
@@ -51,42 +41,26 @@
 				"          CustomerName as string,",
 				"          Email as string,",
 				"          Phone as string,",
-				"          Address as string,",
-				"          {Joining Date} as string",
+				"          Address as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source1",
+				"     format: 'table') ~> CustomerTable",
 				"source(output(",
 				"          id as string,",
 				"          TransactionID as string,",
 				"          CustomerID as string,",
 				"          ProductID as string,",
 				"          Quantity as string,",
-				"          totalAmount as string,",
-				"          date as string",
+				"          totalAmount as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source2",
+				"     format: 'table') ~> TransactionTable",
 				"source(output(",
 				"          Id as string,",
-				"          ItemId as string,",
-				"          ItemName as string,",
-				"          Category as string,",
-				"          Quantity as string,",
-				"          {Price (Per Unit)} as double,",
-				"          Supplier as string,",
-				"          Date as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source3",
-				"source(output(",
-				"          Id as short,",
 				"          ProductName as string,",
 				"          Category as string,",
 				"          Price as decimal(38,18),",
@@ -96,22 +70,17 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source4",
-				"source1, source2 join(source1@Id == CustomerID,",
+				"     format: 'table') ~> ProductTable",
+				"CustomerTable, TransactionTable join(CustomerTable@Id == CustomerID,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1",
-				"join1, source3 join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"     broadcast: 'auto')~> CTjoinTT",
+				"CTjoinTT, ProductTable join(ProductID == ProductTable@Id,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join2",
-				"join2, source4 join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
-				"     joinType:'inner',",
-				"     matchType:'exact',",
-				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join3"
+				"     broadcast: 'auto')~> CTjoinTTjoinPT"
 			]
 		}
 	}

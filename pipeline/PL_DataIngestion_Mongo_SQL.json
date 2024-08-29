@@ -38,7 +38,7 @@
 								},
 								"sink": {
 									"name": "Id",
-									"type": "Int16"
+									"type": "String"
 								}
 							},
 							{
@@ -177,15 +177,6 @@
 									"name": "Address",
 									"type": "String"
 								}
-							},
-							{
-								"source": {
-									"path": "$['DateJoined']['$date']['$numberLong']"
-								},
-								"sink": {
-									"name": "Joining Date",
-									"type": "String"
-								}
 							}
 						]
 					}
@@ -281,15 +272,6 @@
 								},
 								"sink": {
 									"name": "totalAmount"
-								}
-							},
-							{
-								"source": {
-									"path": "$['TransactionDate']['$date']['$numberLong']"
-								},
-								"sink": {
-									"name": "date",
-									"type": "String"
 								}
 							}
 						]
@@ -397,15 +379,6 @@
 								},
 								"sink": {
 									"name": "Supplier",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"path": "$['DateAdded']['$date']['$numberLong']"
-								},
-								"sink": {
-									"name": "Date",
 									"type": "String"
 								}
 							}
