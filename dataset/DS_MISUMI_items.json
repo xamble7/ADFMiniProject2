@@ -1,5 +1,5 @@
 {
-	"name": "DS_MISUMI_Products",
+	"name": "DS_MISUMI_items",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LS_ScrappedData",
@@ -13,7 +13,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "data.csv",
+				"fileName": "item_data.csv",
 				"container": "container-miniproject-adf"
 			},
 			"columnDelimiter": ",",
@@ -21,19 +21,6 @@
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
-		"schema": [
-			{
-				"name": "Item ",
-				"type": "String"
-			},
-			{
-				"name": "Sub Category",
-				"type": "String"
-			},
-			{
-				"name": "Category",
-				"type": "String"
-			}
-		]
+		"schema": []
 	}
 }

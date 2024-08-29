@@ -1,0 +1,95 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_MISUMI_items",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DB_misumi_item",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "derivedColumn2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          categoryCode as string,",
+				"          categoryName as string,",
+				"          seriesCode as long,",
+				"          seriesName as string,",
+				"          brandName as string,",
+				"          earliestShipping as short,",
+				"          description as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 derive(description = replace(replace(description, '<br>', ' '), '<[^>]*>', '')\r",
+				") ~> derivedColumn1",
+				"derivedColumn1 derive(description = replace(\r",
+				"    replace(\r",
+				"        replace(\r",
+				"            replace(\r",
+				"                replace(\r",
+				"                    replace(\r",
+				"                        replace(\r",
+				"                            replace(\r",
+				"                                replace(\r",
+				"                                    replace(\r",
+				"                                        replace(\r",
+				"                                            replace(description, '!', ''),\r",
+				"                                            '@', ''\r",
+				"                                        ),\r",
+				"                                        '#', ''\r",
+				"                                    ),\r",
+				"                                    '$', ''\r",
+				"                                ),\r",
+				"                                '%', ''\r",
+				"                            ),\r",
+				"                            '^', ''\r",
+				"                        ),\r",
+				"                        '&', ''\r",
+				"                    ),\r",
+				"                    '*', ''\r",
+				"                ),\r",
+				"                '(', ''\r",
+				"            ),\r",
+				"            ')', ''\r",
+				"        ),\r",
+				"        '_', ''\r",
+				"    ),\r",
+				"    '+', ''\r",
+				")\r",
+				") ~> derivedColumn2",
+				"derivedColumn2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}
