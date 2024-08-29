@@ -1,19 +1,18 @@
 {
-	"name": "DB_misumi_prods",
+	"name": "DS_transactions",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "DB_AzureSql",
+			"referenceName": "LS_MongoDb",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "Misumi_ScrappedData"
+			"name": "FullStack_Data"
 		},
 		"annotations": [],
-		"type": "AzureSqlTable",
+		"type": "MongoDbAtlasCollection",
 		"schema": [],
 		"typeProperties": {
-			"schema": "dbo",
-			"table": "misumi"
+			"collection": "transactions"
 		}
 	}
 }

@@ -1,10 +1,12 @@
 {
-	"name": "pipeline1",
+	"name": "PL_DataIngestion_Mongo_SQL",
 	"properties": {
 		"activities": [
 			{
 				"name": "OrdersData",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -21,7 +23,6 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
-						"preCopyScript": "DROP TABLE IF EXISTS raw.orders",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false,
 						"tableOption": "autoCreate",
@@ -31,13 +32,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DS_orders",
+						"referenceName": "DS_products",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "ordersRawData",
+						"referenceName": "DB_Products",
 						"type": "DatasetReference"
 					}
 				]
@@ -45,6 +46,8 @@
 			{
 				"name": "ProductsRawData",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "OrdersData",
@@ -77,13 +80,58 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DS_products",
+						"referenceName": "DS_customers",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "productsRawData",
+						"referenceName": "DB_Customer",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "ProductsRawData",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "MongoDbAtlasSource",
+						"batchSize": 100
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_transactions",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DB_Transactions",
 						"type": "DatasetReference"
 					}
 				]

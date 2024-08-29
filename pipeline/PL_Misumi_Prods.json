@@ -1,5 +1,5 @@
 {
-	"name": "pipeline2",
+	"name": "PL_Misumi_Prods",
 	"properties": {
 		"activities": [
 			{
@@ -89,7 +89,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "misumi_prods",
+						"referenceName": "DB_misumi_prods",
 						"type": "DatasetReference"
 					}
 				]

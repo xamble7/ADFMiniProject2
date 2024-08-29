@@ -5,6 +5,9 @@
 			"referenceName": "LS_Mongo_JSON",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "Misumi_ScrappedData"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
