@@ -5,6 +5,9 @@
 			"referenceName": "DB_AzureSql",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "FullStack_Data"
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [],

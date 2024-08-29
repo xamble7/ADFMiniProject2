@@ -1,5 +1,5 @@
 {
-	"name": "dataflow2",
+	"name": "DF_DateFormatting",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
