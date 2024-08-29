@@ -1,9 +1,9 @@
 {
-	"name": "pipeline1",
+	"name": "PL_Mongo_JSON_Sql",
 	"properties": {
 		"activities": [
 			{
-				"name": "OrdersData",
+				"name": "Copy data1",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -20,12 +20,14 @@
 						"batchSize": 100
 					},
 					"sink": {
-						"type": "AzureSqlSink",
-						"preCopyScript": "DROP TABLE IF EXISTS raw.orders",
-						"writeBehavior": "insert",
-						"sqlWriterUseTableLock": false,
-						"tableOption": "autoCreate",
-						"disableMetricsCollection": false
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings",
+							"copyBehavior": "FlattenHierarchy"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
 					},
 					"enableStaging": false
 				},
@@ -37,17 +39,17 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ordersRawData",
+						"referenceName": "Json1",
 						"type": "DatasetReference"
 					}
 				]
 			},
 			{
-				"name": "ProductsRawData",
+				"name": "Copy data2",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "OrdersData",
+						"activity": "Copy data1",
 						"dependencyConditions": [
 							"Completed"
 						]
@@ -63,27 +65,34 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "MongoDbAtlasSource",
-						"batchSize": 100
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*.json",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
 					},
 					"sink": {
 						"type": "AzureSqlSink",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false,
-						"tableOption": "autoCreate",
 						"disableMetricsCollection": false
 					},
 					"enableStaging": false
 				},
 				"inputs": [
 					{
-						"referenceName": "DS_products",
+						"referenceName": "Json1",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "productsRawData",
+						"referenceName": "DS_ordersTable",
 						"type": "DatasetReference"
 					}
 				]
