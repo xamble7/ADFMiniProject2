@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
+				"name": "Data Cleaning",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -17,6 +17,37 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "DF_DateFormatting",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "Generate KPI",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "Data Cleaning",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DF_Generate_KPI",
 						"type": "DataFlowReference"
 					},
 					"compute": {
