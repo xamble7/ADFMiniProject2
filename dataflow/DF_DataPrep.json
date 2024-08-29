@@ -23,10 +23,16 @@
 			],
 			"transformations": [
 				{
-					"name": "derivedColumn1"
+					"name": "RemoveHTMLTags"
 				},
 				{
-					"name": "derivedColumn2"
+					"name": "RemoveHTMLTag"
+				},
+				{
+					"name": "RemoveSpecialCharacters"
+				},
+				{
+					"name": "TrimWhitespace"
 				}
 			],
 			"scriptLines": [
@@ -43,43 +49,14 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
 				"source1 derive(description = replace(replace(description, '<br>', ' '), '<[^>]*>', '')\r",
-				") ~> derivedColumn1",
-				"derivedColumn1 derive(description = replace(\r",
-				"    replace(\r",
-				"        replace(\r",
-				"            replace(\r",
-				"                replace(\r",
-				"                    replace(\r",
-				"                        replace(\r",
-				"                            replace(\r",
-				"                                replace(\r",
-				"                                    replace(\r",
-				"                                        replace(\r",
-				"                                            replace(description, '!', ''),\r",
-				"                                            '@', ''\r",
-				"                                        ),\r",
-				"                                        '#', ''\r",
-				"                                    ),\r",
-				"                                    '$', ''\r",
-				"                                ),\r",
-				"                                '%', ''\r",
-				"                            ),\r",
-				"                            '^', ''\r",
-				"                        ),\r",
-				"                        '&', ''\r",
-				"                    ),\r",
-				"                    '*', ''\r",
-				"                ),\r",
-				"                '(', ''\r",
-				"            ),\r",
-				"            ')', ''\r",
-				"        ),\r",
-				"        '_', ''\r",
-				"    ),\r",
-				"    '+', ''\r",
-				")\r",
-				") ~> derivedColumn2",
-				"derivedColumn2 sink(allowSchemaDrift: true,",
+				") ~> RemoveHTMLTags",
+				"RemoveHTMLTags derive(description = replace(replace(replace(description, '<br>', ' '), '<p>', ''), '</p>', '')\r",
+				") ~> RemoveHTMLTag",
+				"RemoveHTMLTag derive(description = replace(replace(replace(description, '!', ''), '@', ''), '#', '')\r",
+				") ~> RemoveSpecialCharacters",
+				"RemoveSpecialCharacters derive(description = trim(description)\r",
+				") ~> TrimWhitespace",
+				"TrimWhitespace sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
