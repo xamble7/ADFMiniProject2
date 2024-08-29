@@ -3,7 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "OrdersData",
+				"name": "ProductsData",
+				"description": "Ingest the Products data From MongoDb Server to the SQL database. ",
 				"type": "Copy",
 				"state": "Inactive",
 				"onInactiveMarkAs": "Succeeded",
@@ -44,13 +45,14 @@
 				]
 			},
 			{
-				"name": "ProductsRawData",
+				"name": "CustomerData",
+				"description": "Ingest the Customer data From MongoDb Server to the SQL database",
 				"type": "Copy",
 				"state": "Inactive",
 				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
-						"activity": "OrdersData",
+						"activity": "ProductsData",
 						"dependencyConditions": [
 							"Completed"
 						]
@@ -92,11 +94,12 @@
 				]
 			},
 			{
-				"name": "Copy data1",
+				"name": "TransactionsData",
+				"description": "Ingest the Transactions data From MongoDb Server to the SQL database",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "ProductsRawData",
+						"activity": "CustomerData",
 						"dependencyConditions": [
 							"Completed"
 						]
