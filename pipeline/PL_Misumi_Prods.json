@@ -141,7 +141,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow1",
+						"referenceName": "DF_DataPrep",
 						"type": "DataFlowReference"
 					},
 					"compute": {
