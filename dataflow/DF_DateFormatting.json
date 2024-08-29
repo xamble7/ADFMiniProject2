@@ -17,6 +17,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "DBItems"
+				},
+				{
+					"dataset": {
+						"referenceName": "DB_Customer",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
 				}
 			],
 			"sinks": [
@@ -33,6 +40,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "SinkItems"
+				},
+				{
+					"dataset": {
+						"referenceName": "DB_Customer",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
 				}
 			],
 			"transformations": [
@@ -41,6 +55,9 @@
 				},
 				{
 					"name": "DateFormatingDDMMYYYY"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -71,8 +88,21 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> DBItems",
+				"source(output(",
+				"          Id as string,",
+				"          CustomerName as string,",
+				"          Email as string,",
+				"          Phone as string,",
+				"          Address as string,",
+				"          {Joining Date} as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
 				"DBTransactions derive(date = toDate(toTimestamp(toInteger(toLong(date) / toLong(1000))*1000l))) ~> DateFormatInDDMMYYYY",
 				"DBItems derive(Date = toDate(toTimestamp(toInteger(toLong(Date) / toLong(1000))*1000l))) ~> DateFormatingDDMMYYYY",
+				"source1 derive({Joining Date} = toDate(toTimestamp(toInteger(toLong({Joining Date}) / toLong(1000))*1000l))) ~> derivedColumn1",
 				"DateFormatInDDMMYYYY sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -92,7 +122,17 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> SinkItems"
+				"     errorHandlingOption: 'stopOnFirstError') ~> SinkItems",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}

@@ -1,10 +1,6 @@
 {
 	"name": "DS_MISUMI_Products",
 	"properties": {
-		"linkedServiceName": {
-			"referenceName": "LS_Mongo_JSON",
-			"type": "LinkedServiceReference"
-		},
 		"folder": {
 			"name": "Misumi_ScrappedData"
 		},

@@ -22,12 +22,72 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
+						"preCopyScript": "drop table if exists dbo.products",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false,
 						"tableOption": "autoCreate",
 						"disableMetricsCollection": false
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['ProductID']['$numberInt']"
+								},
+								"sink": {
+									"name": "Id",
+									"type": "Int16"
+								}
+							},
+							{
+								"source": {
+									"path": "$['ProductName']"
+								},
+								"sink": {
+									"name": "ProductName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['Category']"
+								},
+								"sink": {
+									"name": "Category",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['Price']['$numberDouble']"
+								},
+								"sink": {
+									"name": "Price",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"path": "$['Supplier']"
+								},
+								"sink": {
+									"name": "Supplier",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['Stock']['$numberInt']"
+								},
+								"sink": {
+									"name": "Stock",
+									"type": "Int32"
+								}
+							}
+						]
+					}
 				},
 				"inputs": [
 					{
@@ -46,14 +106,9 @@
 				"name": "CustomerData",
 				"description": "Ingest the Customer data From MongoDb Server to the SQL database",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "ProductsData",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -69,12 +124,71 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
+						"preCopyScript": "drop table if exists dbo.customer",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false,
 						"tableOption": "autoCreate",
 						"disableMetricsCollection": false
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['CustomerID']['$numberInt']"
+								},
+								"sink": {
+									"name": "Id"
+								}
+							},
+							{
+								"source": {
+									"path": "$['CustomerName']"
+								},
+								"sink": {
+									"name": "CustomerName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['Email']"
+								},
+								"sink": {
+									"name": "Email",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['Phone']"
+								},
+								"sink": {
+									"name": "Phone",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['Address']"
+								},
+								"sink": {
+									"name": "Address",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['DateJoined']['$date']['$numberLong']"
+								},
+								"sink": {
+									"name": "Joining Date",
+									"type": "String"
+								}
+							}
+						]
+					}
 				},
 				"inputs": [
 					{
@@ -93,14 +207,9 @@
 				"name": "TransactionsData",
 				"description": "Ingest the Transactions data From MongoDb Server to the SQL database",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "CustomerData",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -203,14 +312,9 @@
 				"name": "ItemsData",
 				"description": "Ingest the Items data From MongoDb Server to the SQL database",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "TransactionsData",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
