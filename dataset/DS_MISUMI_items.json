@@ -1,0 +1,75 @@
+{
+	"name": "DS_MISUMI_items",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ScrappedData",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Misumi_ScrappedData"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "categories_subcategories_items 1.csv",
+				"container": "container-miniproject-adf"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Category",
+				"type": "String"
+			},
+			{
+				"name": "CategoryId",
+				"type": "String"
+			},
+			{
+				"name": "Subcategory",
+				"type": "String"
+			},
+			{
+				"name": "SubcategoryName",
+				"type": "String"
+			},
+			{
+				"name": "SubcategoryId",
+				"type": "String"
+			},
+			{
+				"name": "DepartmentCode",
+				"type": "String"
+			},
+			{
+				"name": "MinShipDays",
+				"type": "String"
+			},
+			{
+				"name": "MaxShipDays",
+				"type": "String"
+			},
+			{
+				"name": "SeriesCode",
+				"type": "String"
+			},
+			{
+				"name": "SeriesName",
+				"type": "String"
+			},
+			{
+				"name": "BrandCode",
+				"type": "String"
+			},
+			{
+				"name": "BrandName",
+				"type": "String"
+			}
+		]
+	}
+}

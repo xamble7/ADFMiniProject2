@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "DF_FinalData",
 	"properties": {
 		"folder": {
 			"name": "2"
@@ -22,13 +22,18 @@
 					"name": "source2"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DB_ScrapProduct",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "join1"
-				},
-				{
-					"name": "select2"
 				},
 				{
 					"name": "select3"
@@ -36,13 +41,18 @@
 			],
 			"scriptLines": [
 				"source(output(",
-				"          categoryCode as string,",
-				"          categoryName as string,",
-				"          seriesCode as string,",
-				"          seriesName as string,",
-				"          brandName as string,",
-				"          {earliestShipping (Days)} as string,",
-				"          description as string",
+				"          Category as string,",
+				"          CategoryId as string,",
+				"          Subcategory as string,",
+				"          SubcategoryName as string,",
+				"          SubcategoryId as string,",
+				"          DepartmentCode as string,",
+				"          MinShipDays as string,",
+				"          MaxShipDays as string,",
+				"          SeriesCode as string,",
+				"          SeriesName as string,",
+				"          BrandCode as string,",
+				"          BrandName as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -57,34 +67,23 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source2",
-				"select2, source2 join(seriesName == {Sub Category},",
+				"source1, source2 join(source1@Category == source2@Category,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join1",
-				"source1 select(mapColumn(",
-				"          categoryCode,",
-				"          categoryName,",
-				"          seriesCode,",
-				"          seriesName,",
-				"          brandName,",
-				"          description",
-				"     ),",
+				"join1 select(skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select3",
+				"select3 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select2",
-				"join1 select(mapColumn(",
-				"          categoryCode,",
-				"          categoryName,",
-				"          seriesCode,",
-				"          seriesName,",
-				"          brandName,",
-				"          description,",
-				"          {Item },",
-				"          {Sub Category},",
-				"          Category",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select3"
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}

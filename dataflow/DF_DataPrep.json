@@ -8,10 +8,6 @@
 		"typeProperties": {
 			"sources": [
 				{
-					"dataset": {
-						"referenceName": "DS_MISUMI_items",
-						"type": "DatasetReference"
-					},
 					"name": "source1"
 				}
 			],
@@ -49,8 +45,7 @@
 				"          description as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
+				"     validateSchema: false) ~> source1",
 				"source1 derive(description = replace(replace(description, '<br>', ' '), '<[^>]*>', '')) ~> RemoveHTMLTags",
 				"RemoveHTMLTags derive(description = replace(replace(replace(description, '<br>', ' '), '<p>', ''), '</p>', '')) ~> RemoveHTMLTag",
 				"RemoveHTMLTag derive(description = replace(replace(replace(description, '!', ''), '@', ''), '#', '')) ~> RemoveSpecialCharacters",
