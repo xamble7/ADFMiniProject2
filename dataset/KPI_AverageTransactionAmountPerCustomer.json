@@ -6,7 +6,7 @@
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
-			"name": "Key_Performance_Indicator/1"
+			"name": "Key_Performance_Indicator/1_report"
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",

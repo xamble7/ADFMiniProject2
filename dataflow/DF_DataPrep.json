@@ -9,7 +9,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "DB_misumi_item",
+						"referenceName": "DS_MISUMI_items",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
@@ -21,7 +21,7 @@
 						"referenceName": "DB_misumi_item",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "RemoveTags"
 				}
 			],
 			"transformations": [
@@ -35,28 +35,27 @@
 					"name": "RemoveSpecialCharacters"
 				},
 				{
-					"name": "TrimWhitespace"
+					"name": "RemoveSpecialCharacter"
 				}
 			],
 			"scriptLines": [
 				"source(output(",
 				"          categoryCode as string,",
 				"          categoryName as string,",
-				"          seriesCode as string,",
+				"          seriesCode as long,",
 				"          seriesName as string,",
 				"          brandName as string,",
-				"          earliestShipping as string,",
+				"          earliestShipping as short,",
 				"          description as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source1",
+				"     ignoreNoFilesFound: false) ~> source1",
 				"source1 derive(description = replace(replace(description, '<br>', ' '), '<[^>]*>', '')) ~> RemoveHTMLTags",
 				"RemoveHTMLTags derive(description = replace(replace(replace(description, '<br>', ' '), '<p>', ''), '</p>', '')) ~> RemoveHTMLTag",
 				"RemoveHTMLTag derive(description = replace(replace(replace(description, '!', ''), '@', ''), '#', '')) ~> RemoveSpecialCharacters",
-				"RemoveSpecialCharacters derive(description = trim(description)) ~> TrimWhitespace",
-				"TrimWhitespace sink(allowSchemaDrift: true,",
+				"RemoveSpecialCharacters derive(description1 = regexReplace(description, \"<.*?>|[^\\\\sa-zA-Z0-9_.-]\", \" \")) ~> RemoveSpecialCharacter",
+				"RemoveSpecialCharacter sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
@@ -65,7 +64,8 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> RemoveTags"
 			]
 		}
 	}
