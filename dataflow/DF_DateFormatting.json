@@ -1,6 +1,9 @@
 {
 	"name": "DF_DateFormatting",
 	"properties": {
+		"folder": {
+			"name": "1"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [

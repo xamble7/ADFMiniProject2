@@ -111,15 +111,126 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
 					"sink": {
 						"type": "AzureSqlSink",
+						"preCopyScript": "drop table if exists dbo.item",
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false,
 						"tableOption": "autoCreate",
 						"disableMetricsCollection": false
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "categoryCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "categoryCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "categoryName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "categoryName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "seriesCode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "seriesCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "seriesName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "seriesName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "brandName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "brandName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "earliestShipping",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "earliestShipping (Days)",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "description",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "description",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
+				"inputs": [
+					{
+						"referenceName": "DS_MISUMI_items",
+						"type": "DatasetReference"
+					}
+				],
 				"outputs": [
 					{
 						"referenceName": "DB_misumi_item",
@@ -128,7 +239,7 @@
 				]
 			},
 			{
-				"name": "Data flow1",
+				"name": "DF_MISUMI_DataPrep",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {

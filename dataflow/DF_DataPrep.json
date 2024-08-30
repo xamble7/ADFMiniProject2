@@ -1,12 +1,15 @@
 {
 	"name": "DF_DataPrep",
 	"properties": {
+		"folder": {
+			"name": "2"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "DS_MISUMI_items",
+						"referenceName": "DB_misumi_item",
 						"type": "DatasetReference"
 					},
 					"name": "source1"
@@ -39,23 +42,20 @@
 				"source(output(",
 				"          categoryCode as string,",
 				"          categoryName as string,",
-				"          seriesCode as long,",
+				"          seriesCode as string,",
 				"          seriesName as string,",
 				"          brandName as string,",
-				"          earliestShipping as short,",
+				"          earliestShipping as string,",
 				"          description as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
-				"source1 derive(description = replace(replace(description, '<br>', ' '), '<[^>]*>', '')\r",
-				") ~> RemoveHTMLTags",
-				"RemoveHTMLTags derive(description = replace(replace(replace(description, '<br>', ' '), '<p>', ''), '</p>', '')\r",
-				") ~> RemoveHTMLTag",
-				"RemoveHTMLTag derive(description = replace(replace(replace(description, '!', ''), '@', ''), '#', '')\r",
-				") ~> RemoveSpecialCharacters",
-				"RemoveSpecialCharacters derive(description = trim(description)\r",
-				") ~> TrimWhitespace",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 derive(description = replace(replace(description, '<br>', ' '), '<[^>]*>', '')) ~> RemoveHTMLTags",
+				"RemoveHTMLTags derive(description = replace(replace(replace(description, '<br>', ' '), '<p>', ''), '</p>', '')) ~> RemoveHTMLTag",
+				"RemoveHTMLTag derive(description = replace(replace(replace(description, '!', ''), '@', ''), '#', '')) ~> RemoveSpecialCharacters",
+				"RemoveSpecialCharacters derive(description = trim(description)) ~> TrimWhitespace",
 				"TrimWhitespace sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
